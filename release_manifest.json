@@ -1,0 +1,102 @@
+{
+  "format": 1,
+  "application": "SimpleLocalChatbot",
+  "files": [
+    {
+      "path": "config/__init__.py",
+      "sha256": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295"
+    },
+    {
+      "path": "config/chat_image_store.py",
+      "sha256": "3991802cbec25d90d908e6e868f60c66ef2c0926fc4a11776c5797f1fd3fd358"
+    },
+    {
+      "path": "config/chat_store.py",
+      "sha256": "0a0601aca490f2617dabdf6c0dc2921ad1f99fbe20b2df658db9d37dfd158b43"
+    },
+    {
+      "path": "core/__init__.py",
+      "sha256": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295"
+    },
+    {
+      "path": "core/app_diagnostics.py",
+      "sha256": "d71f0b2db70e230a7055f5c09a5c5bbf0543e8a2df50ba10bfb711541d8d8334"
+    },
+    {
+      "path": "core/chat.py",
+      "sha256": "c623171ed08384cb8630b8adda0e03e25a190fed45607a0f002461ad0b2f5c42"
+    },
+    {
+      "path": "core/chat_images.py",
+      "sha256": "05b5066fa2070c47613eedc90dc29060774d76a4e25840fc9d3da5413df2bfaf"
+    },
+    {
+      "path": "core/chat_search.py",
+      "sha256": "489ceca72d9aa182777100721e4744e2ccfdbdd700bc7d6f293e5ff8f0cbfe2c"
+    },
+    {
+      "path": "main.py",
+      "sha256": "754bce6a9f7afdc4448b0b1a6057b0042de276d332f0ec6b179797c0811ec98a"
+    },
+    {
+      "path": "README.md",
+      "sha256": "db55f4575fad13ab1ace2931d61a24095253e110e33aa1e4187fde36226bb881"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "sha256": "5ff6a61af39876b6de9aafe1b35549be5263b5986de302eb02d1dcfdf41e4ba6"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "6c677cd5099abbcb341a6c22d8e51f2e5e5360ec4902e8f9c2469c85a996b994"
+    },
+    {
+      "path": "run.bat",
+      "sha256": "f6a312e6a36738e43e4a57f26c65ba9e76a27e66b9bd57926d314e28d45759ee"
+    },
+    {
+      "path": "services/__init__.py",
+      "sha256": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295"
+    },
+    {
+      "path": "services/chat_service.py",
+      "sha256": "572c9ca6b10c14542cf76ecc8a84db5a29839b43929fe257bfab7712a2345599"
+    },
+    {
+      "path": "services/ollama_account_service.py",
+      "sha256": "416f56afa64e2633f96404521f8a4b40d6fbccf395b298c4f8aa8f1730ee2898"
+    },
+    {
+      "path": "services/signals.py",
+      "sha256": "4c615bfe112c7926fcb56000b637fa6adbd50b9ef9ab2c3a8a16fd088843bb15"
+    },
+    {
+      "path": "services/web_search_service.py",
+      "sha256": "de7d5733f09a96d37f0af7008bc943edc7ce7f447cc2a014ecd241f1bedbc63c"
+    },
+    {
+      "path": "setup.bat",
+      "sha256": "ffbe79bfe09ddad73bfe6037808d84d83b7bbb7395143f3a5316940702f09fe5"
+    },
+    {
+      "path": "ui/__init__.py",
+      "sha256": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295"
+    },
+    {
+      "path": "ui/api_bridge.py",
+      "sha256": "3cf284d1e1fbee8802678d15bebc52983d6c36e2d744c5f1384f487be846d406"
+    },
+    {
+      "path": "ui/web/app.js",
+      "sha256": "616c97355f14ae4615b926e35064794db6e6b519e653ddd6daa8629051d524d5"
+    },
+    {
+      "path": "ui/web/index.html",
+      "sha256": "f1bf961172b7938f8c9ff144f379433cd91cc10a63654fc53b1d841b878fa017"
+    },
+    {
+      "path": "ui/web/style.css",
+      "sha256": "23a83b074b62ce8f1e6523fe203af649b80830f87ca39913a90993977c7b6775"
+    }
+  ]
+}

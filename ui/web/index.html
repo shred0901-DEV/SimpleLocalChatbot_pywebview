@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimpleLocalChatbot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- アプリケーション全体コンテナ -->
+  <div class="app-layout">
+    
+    <!-- トップヘッダーバー -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="app-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="app-title-group">
+          <div class="app-title-row">
+            <h1 class="app-title">SimpleLocalChatbot</h1>
+            <span class="badge badge-version">v1.0.0 Web</span>
+            <span class="dev-author">Developed by shred0901</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div id="connection-indicator" class="status-indicator">
+          <span class="indicator-dot"></span>
+          <span id="header-connection-text" class="indicator-text">Ollama 接続待機中</span>
+        </div>
+        <span class="header-desc">ローカルLLM デスクトップアシスタント</span>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ領域（2カラム） -->
+    <div class="main-body">
+      
+      <!-- 左カラム：コントロールパネル -->
+      <aside class="sidebar">
+        
+        <!-- 新規会話作成ボタン -->
+        <button id="btn-new-chat" class="btn btn-create-chat" type="button">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          新しい会話
+        </button>
+
+        <!-- 会話履歴セクション -->
+        <div class="sidebar-section history-section">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              会話の履歴
+            </div>
+            <span id="history-count" class="counter-badge">0</span>
+          </div>
+          <div class="history-scroll-area">
+            <ul id="history-list" class="history-list">
+              <!-- 会話リストアイテムが動的に挿入されます -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Ollamaクレジット情報カード -->
+        <div class="sidebar-section credit-section">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="section-icon text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v12M15 9.5a3.5 3.5 0 0 0-7 0c0 2 2 3 4 3s4 1 4 3a3.5 3.5 0 0 1-7 0"/>
+              </svg>
+              Ollamaクレジット
+            </div>
+            <button id="btn-refresh-credits" class="icon-button" type="button" title="クレジット情報を更新">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="credit-cards-vertical">
+            <div class="metric-card">
+              <span class="metric-label">購入・利用可能残量</span>
+              <span id="credit-balance" class="metric-value">未取得</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">過去30日消費量</span>
+              <span id="credit-usage" class="metric-value">未取得</span>
+            </div>
+          </div>
+          <div id="credit-status" class="credit-status-message"></div>
+          <div class="search-disclaimer">
+            <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+              <path d="M2 12h20"/>
+            </svg>
+            <span>1送信につきWeb検索1回・最大3件</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 右カラム：チャットメインエリア -->
+      <main class="chat-main">
+        
+        <!-- チャット履歴（トランスクリプト）表示エリア -->
+        <div id="transcript" class="transcript-scroll-area">
+          <div class="transcript-welcome">
+            <div class="welcome-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+            </div>
+            <h2>SimpleLocalChatbot へようこそ</h2>
+            <p>メッセージを入力して会話を開始してください。<br>画像のドラッグ＆ドロップやクリップボード貼り付け（Ctrl+V）にも対応しています。</p>
+          </div>
+        </div>
+
+        <!-- 添付画像プレビューバーストリップ -->
+        <div id="attachment-bar" class="attachment-bar hidden">
+          <!-- 添付サムネイルカードが動的に挿入されます -->
+        </div>
+
+        <!-- チャット操作・入力パネル -->
+        <div class="chat-composer-card">
+          
+          <!-- テキスト入力エリア -->
+          <div class="input-row">
+            <textarea id="chat-input"
+                      placeholder="メッセージを入力してください（Enterで送信、Shift＋Enterで改行）"
+                      rows="3"></textarea>
+            
+            <div class="composer-side-actions">
+              <button id="btn-attach" class="btn btn-attach" type="button" title="画像ファイルを添付 (最大3枚)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                </svg>
+                <span>画像</span>
+              </button>
+
+              <button id="btn-send" class="btn btn-send" type="button" title="送信 (Enter)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>送信</span>
+              </button>
+
+              <button id="btn-cancel" class="btn btn-cancel" type="button" disabled title="生成を中止">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="6" y="6" width="12" height="12" rx="2"/>
+                </svg>
+                <span>中止</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 設定ツールバー（モデル選択・接続先・Web検索等） -->
+          <div class="composer-toolbar">
+            
+            <!-- 接続先設定 -->
+            <div class="toolbar-group">
+              <label for="endpoint-input" class="toolbar-label">
+                <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+                  <line x1="6" y1="6" x2="6.01" y2="6"/>
+                  <line x1="6" y1="18" x2="6.01" y2="18"/>
+                </svg>
+                接続先
+              </label>
+              <input id="endpoint-input" type="text" class="input-dark input-endpoint" value="http://127.0.0.1:11434" spellcheck="false">
+            </div>
+
+            <!-- モデル選択 -->
+            <div class="toolbar-group flex-grow">
+              <label for="model-select" class="toolbar-label">
+                <svg class="mini-icon text-indigo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="4" width="16" height="16" rx="2"/>
+                  <rect x="9" y="9" width="6" height="6"/>
+                  <line x1="9" y1="1" x2="9" y2="4"/>
+                  <line x1="15" y1="1" x2="15" y2="4"/>
+                  <line x1="9" y1="20" x2="9" y2="23"/>
+                  <line x1="15" y1="20" x2="15" y2="23"/>
+                </svg>
+                モデル
+              </label>
+              <div class="select-wrapper">
+                <select id="model-select" class="select-dark">
+                  <!-- モデル一覧 -->
+                </select>
+              </div>
+            </div>
+
+            <!-- モデル再読込ボタン -->
+            <button id="btn-refresh-models" class="btn btn-secondary-dark btn-sm" type="button" title="Ollamaへ接続してモデル一覧を再取得">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+              <span>再読込</span>
+            </button>
+
+            <!-- Web検索トグル -->
+            <div class="toolbar-group">
+              <label class="custom-toggle" title="Ollama公式Web検索API（OLLAMA_API_KEYが必要）">
+                <input id="web-search-check" type="checkbox">
+                <span class="toggle-track"></span>
+                <span class="toggle-text">
+                  <svg class="mini-icon text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                    <path d="M2 12h20"/>
+                  </svg>
+                  Web検索
+                </span>
+              </label>
+            </div>
+
+            <!-- コンテキスト長設定 -->
+            <div class="toolbar-group">
+              <label for="context-input" class="toolbar-label" title="モデルに送信する最大コンテキストサイズ (tokens)">
+                サイズ
+              </label>
+              <input id="context-input" type="number" class="input-dark input-context" min="2048" max="32768" step="1024" value="8192">
+              <span class="unit-tag">tokens</span>
+            </div>
+
+            <!-- モデル解放再試行ボタン -->
+            <button id="btn-retry-release" class="btn btn-warning-dark btn-sm hidden" type="button">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              解放再試行
+            </button>
+
+          </div>
+        </div>
+
+        <!-- 最下部：ステータスフッター -->
+        <footer class="chat-footer">
+          <div class="status-left">
+            <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span id="status-label" class="status-message">起動時にOllamaへ自動接続します。</span>
+          </div>
+          <div id="save-status-label" class="save-status-message"></div>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
